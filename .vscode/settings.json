@@ -1,0 +1,7 @@
+{
+    "editor.codeActionWidget.includeNearbyQuickFixes": true,
+    "editor.codeActionWidget.showHeaders": true,
+    "editor.inlineSuggest.edits.codeShifting": true,
+    "workbench.editor.closeOnFileDelete": false,
+    "workbench.editor.enablePreviewFromCodeNavigation": false
+}
