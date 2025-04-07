@@ -53,3 +53,6 @@ def SolictAlx(query=[],url="https://es.aliexpress.com/w/wholesale"):
        return Rta
    else:
       return "Error Peticion"+ {Rta.status_code}
+
+def ConvPricesCons(unOrig: str, unDest: str):
+   pass
