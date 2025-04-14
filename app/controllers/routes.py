@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from pandas import DataFrame
 
-from app.services import Parseo, FiltrComponentes as FLComp
-from app.repositories import DBComunicator as DBC
+from app.services import Service as Serv
+from app.repositories.Products_Repository import Product_Repository
 
 router = APIRouter()
 querycrc = []
@@ -13,11 +13,11 @@ def Index():
     return {"Lista de Objetos que quieres ver":queryobj,"Lista de Características que quieres que los objetos tengan":querycrc }
 
 @router.post("/addc/")
-def addcarac(qc:  list):
+def addcarac(qc:  str):
     for el in querycrc:
         for ele in qc:
             if ele == el:
-              raise HTTPException()#ERROR que no puede haber dos objetos iguales
+              raise HTTPException(status_code=404,detail="No puede haber 2 iguales")#ERROR que no puede haber dos objetos iguales
     queryobj.append(qc)
     return {"Estas son las características que quieres en tu producto":querycrc}
 
@@ -26,28 +26,27 @@ def addobj(qo: list):
     for el in queryobj:
         for ele in qo:
             if ele == el:
-              raise HTTPException()#ERROR que no puede haber dos objetos iguales
+              raise HTTPException(status_code=404,detail="No puede haber 2 iguales")#ERROR que no puede haber dos objetos iguales
     queryobj.append(qo)
     return {"Estos son los objetos que quieres":queryobj}
 
 @router.get("/search/{local}")
 def search(local:  bool):
     if local:
-        LocDat: DataFrame = DBC.QData(queryobj,querycrc)
-        DBC.WReport(LocDat)
+        LocDat: DataFrame = Serv.QData(queryobj,querycrc)
+        Serv.Write(LocDat)
     else:
         queryobj.append(querycrc)
-        ParsDat: list[list[dict]] = Parseo.EnvSolicts(queryobj)
+        ProdsData: DataFrame = Serv.EnvSolicts(queryobj)
         queryobj = queryobj[:len(queryobj)-len(querycrc)]#Se separa de nuevo a las listas para no ocasionar problemas
 
-        DFProds: DataFrame = FLComp.EstructureData(ParsDat)
-        DBC.WReport(DFProds)
-        return DFProds
+        Serv.Write(ProdsData)
+        return ProdsData
 
 @router.get("/compare")
 def Compare():
-    PrdsComp: DataFrame = DBC.ReadRep()
-    ComparatFrame = FLComp.Compare(PrdsComp)
+    PrdsComp: DataFrame = Serv.Read()
+    ComparatFrame = Serv.Compare(PrdsComp)
     return ComparatFrame
 
 @router.delete("/delc/{carac}")
