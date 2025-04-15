@@ -50,9 +50,16 @@ def ExtctInfoML(URList : list) -> list[dict[str:str,int]]:
         Caracts["url"] = URList[i].get("href")
         Caracts["nombre"] = ProdSoup.select_one("h1.ui-pdp-title").get_text().lower()
         Caracts["precio"] = ProdSoup.select_one("span.andes-money-amount__fraction").get_text()
-        Caracts["cuotas"] = ProdSoup.select_one(".ui-pdp-price__subtitles").get_text()
-        Caracts["color"] = ProdSoup.select("span#picker-label-COLOR_SECONDARY_COLOR").get_text()
-        Caracts["InfoOpcion"] = ProdSoup.select("div.ui-pdp-variations__picker").get_text()
+        
+        if ProdSoup.select_one(".ui-pdp-price__subtitles") != None:
+            Caracts["cuotas"] = ProdSoup.select_one(".ui-pdp-price__subtitles").get_text().lower()
+        else:
+            pass
+        if ProdSoup.select_one("span#picker-label-COLOR_SECONDARY_COLOR") != None:
+            Caracts["color"] = ProdSoup.select_one("span#picker-label-COLOR_SECONDARY_COLOR").get_text().lower()
+        else:
+            pass
+        #Variablist = ProdSoup.select("div.ui-pdp-variations__picker")
         NmCaracts = ProdSoup.select("div.andes-table__header__container")
         VlCaracts = ProdSoup.select("span.andes-table__column--value")
         for i in range(len(NmCaracts)):

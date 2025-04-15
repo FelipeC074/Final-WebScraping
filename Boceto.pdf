@@ -11,18 +11,14 @@ Tecnologías:
    Requests: La utilizaré por ser una librería que permite obtener la información de las paginas Web de forma fácil, sencilla y eficiente
 
    BeautifulSoup: La utilizaré por ser más simple y eficiente que las demas en lo que respecta al parseo de datos(HTML y XML), además de su
-   documentación que permite aprender a usarla fácil
-
-   Selenium: La utilizaré para ejecutar el Javascript de las paginas Web lo que permite interactuar mejor con páginas dinamicas
-   como lo son las webs de e-commerce, al consumir más recursos y tiempo para scrapear solo la considero como una posibilidad 
+   documentación que permite aprender a usarla fácil 
 
    Pandas: La utilizaré para el analisis de datos y su capacidad para ordenarlos en tablas que pueden ser mostradas directamente al
    usuario por su facilidad de lectura
 
-   Bases de Datos(SQLite): Las utilizaré por permitir almacenar y manejar los datos de forma simple
+   SQLAlchemy, SQLite: Las utilizaré por permitir almacenar y manejar los datos de forma simple
 
-   Click: La utilizaré para la comunicación por teminal, siendo su interfaz de Usuario y validación automatica de las entradas
-   que la hacen la mejor diseñadora de CLI's para este proyecto
+   FastAPI: La utilizaré para la comunicación con el usuario
    
    Time: La utilizaré para crear lapsos de tiempo entre peticiones a una misma web
 
@@ -50,33 +46,27 @@ adaptea lo que necesiten
 
 Estructura:(Diagrama)
 Proyecto_Final/
-    base_Datos/
+    controllers/
        |
-       |--> DBComunicador.py
-       |--> Base de Datos(SQLite)
+       |--> routes.py
     Main.py
-    extracción HTML/
-       |
-       |--> EnvSolicitudes.py
-       |--> Parseo.py
     procesamiento/
        |
-       |--> FiltrPrecios.py
-       |--> FiltrComponentes.py
-       |--> Comparador.py
+       |--> Parseo.py
+       |--> EnvSolicitudes
+       |--> Service.py
        |--> TramitPagos.py
     comunicación_Usuario/
        |
-       |--> Entrada.py
-       |--> Salida.py
+       |--> Products_Repository.py
+       |--> DataBase.py
+       |--> Table_Models.py
     requirements.txt
-    ReadMe.md
+    DBase.db
     .gitignore
     Boceto.txt
 
 Mejoras Futuras:
-
-Servicio Web con FastAPI, para mejorar la interfaz de usuario
 
 Agregar Funcionalidades más complejas como:
 
@@ -84,3 +74,9 @@ Analisis de las características de la marca, identifica en que se especializa l
 
 Analisis de los componentes, identifica componentes o caracteristicas de un producto con el fin de asignarle una categoría
 (por ej. si un celular tiene un procesador SnapDragon, al celular se le dara la categoría "gamer" por estar especializados en el Gaming)
+
+Mejoras en la Base de Datos:
+
+La creacion de modelos de tablas para distintos tipos de objetos como un modelo para ropa que incluya el talle o uno para dispositivos
+electronicos que prevea que tendrá ciertos componentes
+

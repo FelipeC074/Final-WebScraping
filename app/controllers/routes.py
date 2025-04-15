@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from pandas import DataFrame
 
-from app.services import Service as Serv
+from app.services.Service import Services
 from app.repositories.Products_Repository import Product_Repository
 
 router = APIRouter()
 querycrc = []
 queryobj = []
+Serv = Services()
 
 @router.get("/")
 def Index():
@@ -14,19 +15,15 @@ def Index():
 
 @router.post("/addc/")
 def addcarac(qc:  str):
-    for el in querycrc:
-        for ele in qc:
-            if ele == el:
-              raise HTTPException(status_code=404,detail="No puede haber 2 iguales")#ERROR que no puede haber dos objetos iguales
-    queryobj.append(qc)
+    if qc in querycrc:
+        raise HTTPException(status_code=404,detail="No puede haber 2 caracteristicas iguales")#ERROR que no puede haber dos objetos iguales
+    querycrc.append(qc)
     return {"Estas son las características que quieres en tu producto":querycrc}
 
 @router.post("/addo/")
-def addobj(qo: list):
-    for el in queryobj:
-        for ele in qo:
-            if ele == el:
-              raise HTTPException(status_code=404,detail="No puede haber 2 iguales")#ERROR que no puede haber dos objetos iguales
+def addobj(qo: str):
+    if qo in queryobj:
+        raise HTTPException(status_code=404,detail="No puede haber 2 objetos iguales")#ERROR que no puede haber dos objetos iguales
     queryobj.append(qo)
     return {"Estos son los objetos que quieres":queryobj}
 
@@ -37,11 +34,12 @@ def search(local:  bool):
         Serv.Write(LocDat)
     else:
         queryobj.append(querycrc)
-        ProdsData: DataFrame = Serv.EnvSolicts(queryobj)
-        queryobj = queryobj[:len(queryobj)-len(querycrc)]#Se separa de nuevo a las listas para no ocasionar problemas
-
+        ProdsData: DataFrame = Serv.WbScrapp(queryobj)
+        for i in range(len(queryobj)):#Se separa de nuevo a las listas para no ocasionar problemas
+             if queryobj[i] in querycrc:
+                 queryobj.remove(queryobj[i])
         Serv.Write(ProdsData)
-        return ProdsData
+        return Serv.Data
 
 @router.get("/compare")
 def Compare():
