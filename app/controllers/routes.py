@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException,Depends
 from pandas import DataFrame
 
+from app.repositories.DataBase import Get_DB
 from app.services.Service import Services
-from app.repositories.Products_Repository import Product_Repository
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 querycrc = []
@@ -28,9 +29,9 @@ def addobj(qo: str):
     return {"Estos son los objetos que quieres":queryobj}
 
 @router.get("/search/{local}")
-def search(local:  bool):
+def search(local:  bool, db: Session = Depends(Get_DB)):
     if local:
-        LocDat: DataFrame = Serv.QData(queryobj,querycrc)
+        LocDat: DataFrame = Serv.LocalQuery(db,queryobj,querycrc)
         Serv.Write(LocDat)
     else:
         queryobj.append(querycrc)
@@ -44,6 +45,7 @@ def search(local:  bool):
 @router.get("/compare")
 def Compare():
     PrdsComp: DataFrame = Serv.Read()
+    return type(PrdsComp)
     ComparatFrame = Serv.Compare(PrdsComp)
     return ComparatFrame
 

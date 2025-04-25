@@ -14,25 +14,25 @@ def EnvSolicts(querys: list[str]) -> dict:
     #Mercado Libre
     RtaML = Solc.SolictML(querys)
     MLSoup = BeautifulSoup(RtaML.content, "html.parser")
-    urlsML = MLSoup.select("a.poly-component__title",limit= 20)
+    urlsML = MLSoup.select("a.poly-component__title",limit=10)
     DataProductsML = ExtctInfoML(urlsML)
     #E-Bay
     RtaeB = Solc.SolicteBay(querys)
     eBSoup = BeautifulSoup(RtaeB.content, "html.parser")
-    urlseB = eBSoup.select("a.s-item__info clearfix",limit= 20)
+    urlseB = eBSoup.select("a.s-item__info clearfix",limit= 10)
     DataProductseB = ExtctInfoeB(urlseB)
-    #Amazon
-    RtaAm = Solc.SolictAm(querys)
+    #Amazon No lo uso más porque la pagina no me deja entrar, puedo enviar una solicitud exitosa pero luego de esta, al probar de nuevo,la solicitud es rechazada
+    """RtaAm = Solc.SolictAm(querys)
     AmSoup = BeautifulSoup(RtaAm.content, "html.parser")
     urlsAm = AmSoup.select("a..a-section a-spacing-small puis-padding-left-small puis-padding-right-small",limit= 20)
-    DataProductsAm = ExtctInfoAm(urlsAm)
+    DataProductsAm = ExtctInfoAm(urlsAm)"""
     #Aliexpress
     RtaAlx = Solc.SolictAlx(querys)
     AlxSoup = BeautifulSoup(RtaeB.content, "html.parser")
-    urlsAlx = AlxSoup.select("a.s-item__info clearfix",limit= 20)
+    urlsAlx = AlxSoup.select("a.s-item__info clearfix",limit= 10)
     DataProductsAlx = ExtctInfoML(urlsAlx)
  
-    DataPrdtcs = [DataProductsML,DataProductseB,DataProductsAm,DataProductsAlx]
+    DataPrdtcs = [DataProductsML,DataProductseB,DataProductsAlx]
     return DataPrdtcs
     
 #Parseo de Producto por producto separado
@@ -49,8 +49,8 @@ def ExtctInfoML(URList : list) -> list[dict[str:str,int]]:
 
         Caracts["url"] = URList[i].get("href")
         Caracts["nombre"] = ProdSoup.select_one("h1.ui-pdp-title").get_text().lower()
-        Caracts["precio"] = ProdSoup.select_one("span.andes-money-amount__fraction").get_text()
-        
+        #Caracts["precio"] = ProdSoup.select_one("span.andes-money-amount__fraction").get_text()
+
         if ProdSoup.select_one(".ui-pdp-price__subtitles") != None:
             Caracts["cuotas"] = ProdSoup.select_one(".ui-pdp-price__subtitles").get_text().lower()
         else:
@@ -78,7 +78,7 @@ def ExtctInfoeB(URList : list) -> list[dict[str:str,int]]:
 
         Caracts["url"] = URList[i].get("href")
         Caracts["nombre"] = ProdSoup.select_one(".ux-textspans ux-textspans--BOLD").get_text().lower()
-        Caracts["precio"] = ProdSoup.select_one(".x-price-approx").get_text()
+        #Caracts["precio"] = ProdSoup.select_one(".x-price-approx").get_text()
         if Caracts["precio"] == None:
             Caracts["precio"] = ProdSoup.select_one(".x-price-primary").get_text()
         
@@ -100,12 +100,12 @@ def ExtctInfoAm(URList : list) -> list[dict[str:str,int]]:
 
         Caracts["url"] = URList[i].get("href")
         Caracts["nombre"] = ProdSoup.select_one("span#productTitle").get_text().lower()
-        PrecioList = ProdSoup.select("span.a-price a-text-price a-size-medium apexPriceToPay")
-        if not len(PrecioList) == 2:
-            Caracts["precio"] = int(PrecioList[0].get_text())
-        else:
-            Caracts["preciomin"] = int(PrecioList[0].get_text())
-            Caracts["preciomiax"] = int(PrecioList[1].get_text())
+        #PrecioList = ProdSoup.select("span.a-price a-text-price a-size-medium apexPriceToPay")
+        #if not len(PrecioList) == 2:
+        #    Caracts["precio"] = int(PrecioList[0].get_text())
+        #else:
+        #    Caracts["preciomin"] = int(PrecioList[0].get_text())
+        #    Caracts["preciomiax"] = int(PrecioList[1].get_text())
 
         NmCaracts = ProdSoup.select("td.a-span3")
         VlCaracts = ProdSoup.select("td.a-span9")
@@ -131,7 +131,7 @@ def ExtctInfoAlx(URList : list) -> list[dict[str:str,int]]:
 
         Caracts["url"] = str(URList[i].get("href"))
         Caracts["nombre"] = ProdSoup.select_one(".title--wrap--UUHae_g").get_text().lower()
-        Caracts["precio"] = ProdSoup.select_one("div.price--current--I3Zeidd product-price-current").get_text()
+        #Caracts["precio"] = ProdSoup.select_one("div.price--current--I3Zeidd product-price-current").get_text()
         NmCaracts = ProdSoup.select(".specification--title--SfH3sA8")
         VlCaracts = ProdSoup.select(".specification--desc--Dxx6W0W")
         for i in range(len(NmCaracts)):

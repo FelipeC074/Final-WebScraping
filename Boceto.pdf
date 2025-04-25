@@ -19,8 +19,6 @@ Tecnologías:
    SQLAlchemy, SQLite: Las utilizaré por permitir almacenar y manejar los datos de forma simple
 
    FastAPI: La utilizaré para la comunicación con el usuario
-   
-   Time: La utilizaré para crear lapsos de tiempo entre peticiones a una misma web
 
 Funcionalidades: 
 
@@ -34,9 +32,7 @@ Funcionalidades:
 
    Guardado de Busqueda (puedes seguir tu busqueda aunque el programa se haya dejado de ejecutar)
 
-   Confiabilidad del Vendedor (Puntuación, Reseñas del producto)
-
-   Comunicación a través de la terminal con Click(en lo posible incluiré una interfaz grafica o servicio Web) 
+   Comunicación a través de Servidor Web
 
    Retorno de URL (además de la información del producto se regresará la URL para acceder a comprarlo)
 
@@ -75,8 +71,17 @@ Analisis de las características de la marca, identifica en que se especializa l
 Analisis de los componentes, identifica componentes o caracteristicas de un producto con el fin de asignarle una categoría
 (por ej. si un celular tiene un procesador SnapDragon, al celular se le dara la categoría "gamer" por estar especializados en el Gaming)
 
+Realizacion automatica de WebScraping con temporizador, para no depender de humanos para absorber nuevos datos
 Mejoras en la Base de Datos:
 
 La creacion de modelos de tablas para distintos tipos de objetos como un modelo para ropa que incluya el talle o uno para dispositivos
 electronicos que prevea que tendrá ciertos componentes
+
+Utilizacion de una base de datos NoSQL, para evitar perder datos o guardar información de más 
+
+Mejoras en el analisis de Datos:
+
+Analisis de precios a traves del tiempo, tomando el tiempo en que son realizadas las solicitudes HTTPS y los precios de ciertos productos
+analizar la evolucion del valor de este 
+
 

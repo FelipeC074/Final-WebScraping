@@ -10,35 +10,44 @@ def SolictML(query=[],url="https://listado.mercadolibre.com.ar/"):
    if Rta.status_code == 200:
        return Rta
    else:
-      return "Error Peticion" + "f{Rta.status_code}"
+      return f"Error Peticion{Rta.status_code}"
 
-def SolicteBay(query=[] ,url="https://www.ebay.com/sch/i.html?"):
+def SolicteBay(query=[] ,url="https://www.ebay.com/sch/i.html?_nkw="):
    #urlmodel = "https://www.ebay.com/sch/i.html?_nkw=zapatillas+nike+hombre"
    finalparam = ""
    for el in query:
-      finalparam = finalparam + str(el) + "+"
+      url += str(el).lower().replace(" ","%20") + "+"
+     # print(finalparam)
+   url = url[:-1]
+   
+   
    headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0"}
-   params = {"_nkw": finalparam.rstrip("+")}
+   params = {"nkw": finalparam}
 
-   Rta = requests.get(url,headers=headers, params= params)
-   if Rta.status_code == 200:
-       return Rta
+   Rta = requests.get(url=url)
+
+   if Rta.status_code == 500 or Rta.status_code == 503:
+       return f"Error Peticion {Rta.status_code}"
    else:
-      return "Error Peticion"+ "f{Rta.status_code}"
+       return Rta
 
 
-def SolictAm(query=[],url="https://www.amazon.com/s?"):
+"""def SolictAm(query=[],url="https://www.amazon.com/s?k="):
    #urlmodel = "https://www.amazon.com/s?k=zapatillas+nike+hombre&ref=nav_bb_sb"
-   for i in range(len(query)):
-      kparam = query[i] + "+"
+   for el in query:
+      url += str(el).lower().replace(" ","") + "+"
+     # print(finalparam)
+   url = url[:-1]
+   
    headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0"}
-   params = {"k": kparam.rstrip("+"),"ref":"nav_bb_sb"}
-
-   Rta = requests.get(url,headers=headers, params= params)
-   if Rta.status_code == 200:
-       return Rta
+   params = {"k": "","ref":"nav_bb_sb"}
+   url += "&ref=nav_bb_sb"
+   
+   Rta = requests.get(url,headers=headers,allow_redirects=False)
+   if Rta.status_code == 500 or Rta.status_code == 503:
+      return f"Error de Peticion, codigo{Rta.status_code}"
    else:
-      return "Error Peticion"+ "f{Rta.status_code}"
+      return Rta"""
 
 def SolictAlx(query=[],url="https://es.aliexpress.com/w/wholesale"):
    #urlModel = "https://es.aliexpress.com/w/wholesale-zapatillas-hombre-nike.html?"
@@ -53,9 +62,8 @@ def SolictAlx(query=[],url="https://es.aliexpress.com/w/wholesale"):
    if Rta.status_code == 200:
        return Rta
    else:
-      return "Error Peticion"+ "f{Rta.status_code}"
+      return f"Error Peticion{Rta.status_code}"
 
 def ConvPricesCons(unOrig: str, unDest: str):
    pass
 
-BUDiuui = SolicteBay(["celular","8gb ram"])
