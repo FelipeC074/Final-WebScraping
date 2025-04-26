@@ -122,7 +122,7 @@ def ExtctInfoAm(URList : list) -> list[dict[str:str,int]]:
     return Productos
         
 
-def ExtctInfoAlx(URList : list) -> list[dict[str:str,int]]:
+def ExtctInfoAlx(URList : list) -> list[dict[str,str | int]]:
     Productos = []
     for i in range(len(URList)):
         RtaAlx = Solc.SolictAlx(url=URList[i].get("href"))

@@ -43,10 +43,13 @@ def search(local:  bool, db: Session = Depends(Get_DB)):
         return Serv.Data
 
 @router.get("/compare")
-def Compare():
+def Compare(excluir_caracs: list[str]):
+    exclusionli = ["url"]
     PrdsComp: DataFrame = Serv.Read()
-    return type(PrdsComp)
-    ComparatFrame = Serv.Compare(PrdsComp)
+    if len(excluir_caracs) >= 1:
+        for i in range(len(excluir_caracs)):
+            exclusionli.append(excluir_caracs)
+    ComparatFrame = Serv.Compare(PrdsComp,exclusionli)
     return ComparatFrame
 
 @router.delete("/delc/{carac}")

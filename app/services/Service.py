@@ -3,6 +3,7 @@ from app.repositories.Products_Repository import Product_Repository
 from app.repositories.Table_Models import Prdct_Key_Model,Prdct_Value_Model
 from app.services.Parseo import EnvSolicts
 from sqlalchemy.orm import Session
+from app.services.Comparador import extraer_numero, TransBool
 
 class Services:
    def __init__(self):
@@ -22,53 +23,53 @@ class Services:
    
    def WbScrapp(self,query: list[str]):
       WebProds: list[list[dict[str:str,int]]] = EnvSolicts(query)
-      print(type(WebProds))
+      print(WebProds)
       DFProds: pd.DataFrame= self.EstructureData(WebProds)
       return DFProds
 
-   """def EstructureData(self, Productos:  list[list[dict[str:str,int]]]) -> pd.DataFrame:
-     DFPrdcts = pd.DataFrame({})
-     carset: set = set({}) 
-     valdic = {}
-
-     for i in range(len(Productos)):
-      for j in range(len(Productos[i])):
-         #if str(type(i)) != "<class int>":
-         for nmcar,vlcar in Productos[i][j].items():
-            carset.add(nmcar) #Para que no haya columnas repetidas
-            valdic[nmcar] = vlcar  #Todos los valores pero aun relacionados a sus nombre de caracteristica
-            
-     carset: list = list(carset)
-     for i in range(len(carset)):
-      DFPrdcts[carset[i]] = [v for k,v in valdic.items() if k == carset[i]] #en cada ciclo se crea una columna en el dataframe
-      #esta columna recibe el valor de todos los valores de las caracteristicas guardadas que corresponden al nombre de la columna
-     return DFPrdcts #Un Dataframe con {nombre:["nam1","nam2"],precio:[1888,2977]}
-    """
    def EstructureData(self, Productos: list[list[dict[str, str | int]]]) -> pd.DataFrame:
-    lista_filas = []
+      lista_filas = []
 
-    for producto_lista in Productos:
-        fila = {}
-        for item in producto_lista:
-            fila.update(item)
-        lista_filas.append(fila)
+      for sublista in Productos:
+        for producto in sublista:
+            if isinstance(producto, dict):
+                lista_filas.append(producto)
 
-    df = pd.DataFrame(lista_filas)
-    df = df.where(pd.notnull(df), None)
+      if not lista_filas:
+        print("No se detectaron productos en la entrada.")
+        raise pd.DataFrame()
 
-    return df
+      df = pd.DataFrame(lista_filas)
+      df = df.where(pd.notnull(df), None)  # Para evitar errores de JSON con NaN
+      return df
    
-   def Compare(Data: pd.DataFrame):
-     BaseParams = []
-     ComparatFrame = pd.DataFrame()
-     counter = 0
-     for key,val in Data.items():
-       BaseParams.append(val[0])
-   
-     for key,val in Data.items():#Solo funciona con valores numericos
-       counter += 1 
-       ComparatFrame[key] = [BaseParams[counter] - value for value in Data.values()]
-     return ComparatFrame
-   
+   def Compare(df: pd.DataFrame, columnas_excluir=["url"]) -> pd.DataFrame:
+    # Eliminar columnas irrelevantes como 'url'
+    columnas_excluir = [col for col in columnas_excluir if col in df.columns]
+    df_filtrado = df.drop(columns=columnas_excluir)
 
-   
+    datos_comparativos = {}
+
+    for columna in df_filtrado.columns:
+        col_data = df_filtrado[columna]
+
+        # Paso 1: Intentamos extraer números
+        valores_numericos = [extraer_numero(valor) for valor in col_data]
+        tiene_numeros = any(val is not None for val in valores_numericos)
+
+        if tiene_numeros:
+            datos_comparativos[columna + " (num)"] = valores_numericos
+            continue  # Ya lo procesamos
+
+        # Paso 2: Intentamos detectar valores binarios (sí/no)
+        valores_bool = [TransBool(valor) for valor in col_data]
+        tiene_booleanos = any(val is not None for val in valores_bool)
+
+        if tiene_booleanos:
+            datos_comparativos[columna + " (bool)"] = valores_bool
+            continue
+
+        # Paso 3: Si no es numérico ni booleano, lo dejamos como string/texto
+        datos_comparativos[columna] = list(col_data)
+
+    return pd.DataFrame(datos_comparativos)
