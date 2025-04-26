@@ -19,11 +19,10 @@ class Services:
      self.repository.SaveData(self.Data,db,Prdct_Key_Model,Prdct_Value_Model)
      
    def LocalQuery(self, db, objli: list[str],crcli: list[str]):
-      return self.repository.QData(db,objli,crcli)
+      return self.repository.QData(db=db,Caracs=crcli)
    
    def WbScrapp(self,query: list[str]):
       WebProds: list[list[dict[str:str,int]]] = EnvSolicts(query)
-      print(WebProds)
       DFProds: pd.DataFrame= self.EstructureData(WebProds)
       return DFProds
 
@@ -44,7 +43,7 @@ class Services:
       return df
    
    def Compare(df: pd.DataFrame, columnas_excluir=["url"]) -> pd.DataFrame:
-    # Eliminar columnas irrelevantes como 'url'
+    # Eliminar columnas irrelevantes
     columnas_excluir = [col for col in columnas_excluir if col in df.columns]
     df_filtrado = df.drop(columns=columnas_excluir)
 

@@ -2,22 +2,21 @@ from app.repositories.Table_Models import Prdct_Key_Model,Prdct_Value_Model
 import pandas as pd
 from sqlalchemy.orm import Session
 
-
 class Product_Repository:
    #db:  Session,Producto_Model:Product_Keys
   def SaveData(self,db:  Session, Data: pd.DataFrame,Prdct_Key_Model:Prdct_Key_Model, Prdct_Val_Model:Prdct_Value_Model) -> None:
     """
-    Comunicates with the DB to save data
+    Se comunica con la DB para guardar los datos 
 
     Parameters:
-    Data (pd.DataFrame): The data to save
+    Data (pd.DataFrame): Los datos a guerdar
 
     Returns:
     None: 
     """
     keyli = []
     valuli = []
-    for i in range(len(Data["price"])):
+    for i in range(len(Data["precio"])):
       for k,v in Data.items():
          keyli.append(k)
          valuli.append(v[i])
@@ -91,6 +90,7 @@ class Product_Repository:
     db.commit()
     db.refresh(NewProdK)
     NewProdV = Prdct_Val_Model(
+      num = NewProdK.id,
      val1 = valuli[0],
      val2 = valuli[1],
      val3 = valuli[2],
@@ -155,7 +155,6 @@ class Product_Repository:
     db.add(NewProdV)
     db.commit()
     db.refresh(NewProdV)
-    #Puts this in DATABASE
 
   def ReadReps(self) -> pd.DataFrame:
    Reporte: pd.DataFrame = pd.read_csv("report.csv")
@@ -175,7 +174,7 @@ class Product_Repository:
    NRepsFrame = self.RepeatRevision(Frame)
    self.SaveData(NRepsFrame)
 
-  def QData(self,db:  Session, Objts: list[str],Caracs: list[str]):
+  def QData(self,db: Session,Caracs: list[str]):
    KeyCrcs = []
    ValCrcs = []
    for crc in Caracs:
@@ -188,7 +187,6 @@ class Product_Repository:
        ValCrcs.append(crc)
   
    Product_Kys = db.query(Prdct_Key_Model).filter(
-Prdct_Key_Model.key0.in_(KeyCrcs),
 Prdct_Key_Model.key1.in_(KeyCrcs),
 Prdct_Key_Model.key2.in_(KeyCrcs),
 Prdct_Key_Model.key3.in_(KeyCrcs),
@@ -247,10 +245,10 @@ Prdct_Key_Model.key55.in_(KeyCrcs),
 Prdct_Key_Model.key56.in_(KeyCrcs),
 Prdct_Key_Model.key57.in_(KeyCrcs),
 Prdct_Key_Model.key58.in_(KeyCrcs),
-Prdct_Key_Model.key59.in_(KeyCrcs)
+Prdct_Key_Model.key59.in_(KeyCrcs),
+Prdct_Key_Model.key60.in_(KeyCrcs)
    )
    Product_Vals = db.query(Prdct_Value_Model).filter(
-    Prdct_Value_Model.val0.in_(ValCrcs),
 Prdct_Value_Model.val1.in_(ValCrcs),
 Prdct_Value_Model.val2.in_(ValCrcs),
 Prdct_Value_Model.val3.in_(ValCrcs),
@@ -309,7 +307,8 @@ Prdct_Value_Model.val55.in_(ValCrcs),
 Prdct_Value_Model.val56.in_(ValCrcs),
 Prdct_Value_Model.val57.in_(ValCrcs),
 Prdct_Value_Model.val58.in_(ValCrcs),
-Prdct_Value_Model.val59.in_(ValCrcs)
+Prdct_Value_Model.val59.in_(ValCrcs),
+Prdct_Value_Model.val60.in_(ValCrcs)
    )
    
    

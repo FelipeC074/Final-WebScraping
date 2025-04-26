@@ -14,7 +14,7 @@ def EnvSolicts(querys: list[str]) -> dict:
     #Mercado Libre
     RtaML = Solc.SolictML(querys)
     MLSoup = BeautifulSoup(RtaML.content, "html.parser")
-    urlsML = MLSoup.select("a.poly-component__title",limit=10)
+    urlsML = MLSoup.select("a.poly-component__title",limit=20)
     DataProductsML = ExtctInfoML(urlsML)
     #E-Bay
     RtaeB = Solc.SolicteBay(querys)

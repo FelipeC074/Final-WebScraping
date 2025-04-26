@@ -1,4 +1,4 @@
-def extraer_numero(valor: str):
+def extraer_numero(valor: str) -> float:
     """Extrae el primer número decimal de una cadena."""
     if not isinstance(valor, str):
         return None
@@ -21,7 +21,7 @@ def extraer_numero(valor: str):
     except:
         return None
 
-def TransBool(valor: str):
+def TransBool(valor: str) -> bool:
     """Convierte 'sí'/'no' (y variantes) en booleanos."""
     if not isinstance(valor, str):
         return None
