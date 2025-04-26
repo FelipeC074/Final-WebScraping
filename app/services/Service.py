@@ -52,7 +52,6 @@ class Services:
     for columna in df_filtrado.columns:
         col_data = df_filtrado[columna]
 
-        # Paso 1: Intentamos extraer números
         valores_numericos = [extraer_numero(valor) for valor in col_data]
         tiene_numeros = any(val is not None for val in valores_numericos)
 
@@ -60,7 +59,7 @@ class Services:
             datos_comparativos[columna + " (num)"] = valores_numericos
             continue  # Ya lo procesamos
 
-        # Paso 2: Intentamos detectar valores binarios (sí/no)
+
         valores_bool = [TransBool(valor) for valor in col_data]
         tiene_booleanos = any(val is not None for val in valores_bool)
 
@@ -68,7 +67,6 @@ class Services:
             datos_comparativos[columna + " (bool)"] = valores_bool
             continue
 
-        # Paso 3: Si no es numérico ni booleano, lo dejamos como string/texto
         datos_comparativos[columna] = list(col_data)
 
     return pd.DataFrame(datos_comparativos)
